@@ -5,6 +5,6 @@ part 'build_configuration.freezed.dart';
 enum Environment { development, staging, production }
 
 @freezed
-class BuildConfiguration with _$BuildConfiguration {
+abstract class BuildConfiguration with _$BuildConfiguration {
   const factory BuildConfiguration({required Environment environment}) = _BuildConfiguration;
 }

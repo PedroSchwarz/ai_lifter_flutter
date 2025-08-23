@@ -12,7 +12,8 @@ dependencies:
   
   # State Management
   flutter_bloc: ^8.1.6
-  bloc_test: ^9.1.7
+
+  gap: ^3.0.1
   
   # Routing
   go_router: ^14.6.2
@@ -27,8 +28,6 @@ dependencies:
   path: ^1.9.0
   
   # Code Generation
-  drift_dev: ^2.17.0
-  build_runner: ^2.4.13
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
   
@@ -41,6 +40,10 @@ dependencies:
   meta: ^1.16.0
 
 dev_dependencies:
+  bloc_test: ^9.1.7
+  drift_dev: ^2.17.0
+  build_runner: 
+
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0

@@ -35,20 +35,24 @@ class Locator extends BaseServiceLocator {
     getIt.registerSingleton<CalculateOneRepMaxUseCase>(CalculateOneRepMaxUseCase());
     getIt.registerSingleton<CalculateTrainingWeightUseCase>(CalculateTrainingWeightUseCase());
     getIt.registerSingleton<AnalyzeProgressTrendsUseCase>(AnalyzeProgressTrendsUseCase());
-
-    // Register progression algorithm
-    getIt.registerSingleton<ProgressionAlgorithmUseCase>(
-      ProgressionAlgorithmUseCase(
-        analyzeProgressionUseCase: getIt(),
-        calculateOneRepMaxUseCase: getIt(),
-        calculateTrainingWeightUseCase: getIt(),
-        analyzeProgressTrendsUseCase: getIt(),
-      ),
+    getIt.registerSingleton<GenerateStrengthPlanUseCase>(GenerateStrengthPlanUseCase());
+    getIt.registerSingleton<GenerateHypertrophyPlanUseCase>(GenerateHypertrophyPlanUseCase());
+    getIt.registerSingleton<GenerateWorkoutPlanUseCase>(
+      GenerateWorkoutPlanUseCase(generateStrengthPlanUseCase: getIt(), generateHypertrophyPlanUseCase: getIt()),
     );
 
     // Register repositories
     getIt.registerSingleton<WorkoutsRepository>(
-      WorkoutsRepository(exercisesManager: getIt(), workoutsManager: getIt(), workoutSetsManager: getIt(), progressionAlgorithm: getIt()),
+      WorkoutsRepository(
+        exercisesManager: getIt(),
+        workoutsManager: getIt(),
+        workoutSetsManager: getIt(),
+        analyzeProgressionUseCase: getIt(),
+        calculateOneRepMaxUseCase: getIt(),
+        calculateTrainingWeightUseCase: getIt(),
+        analyzeProgressTrendsUseCase: getIt(),
+        generateWorkoutPlanUseCase: getIt(),
+      ),
     );
 
     // Register cubits
