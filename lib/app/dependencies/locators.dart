@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:lifter/app/app.dart';
 import 'package:lifter/features/progress/progress.dart';
+import 'package:lifter/features/workout_session/workout_session.dart';
 import 'package:lifter/features/workouts/workouts.dart';
 import 'package:meta/meta.dart';
 
@@ -35,23 +36,28 @@ class Locator extends BaseServiceLocator {
     getIt.registerSingleton<CalculateOneRepMaxUseCase>(CalculateOneRepMaxUseCase());
     getIt.registerSingleton<CalculateTrainingWeightUseCase>(CalculateTrainingWeightUseCase());
     getIt.registerSingleton<AnalyzeProgressTrendsUseCase>(AnalyzeProgressTrendsUseCase());
-
-    // Register progression algorithm
-    getIt.registerSingleton<ProgressionAlgorithmUseCase>(
-      ProgressionAlgorithmUseCase(
-        analyzeProgressionUseCase: getIt(),
-        calculateOneRepMaxUseCase: getIt(),
-        calculateTrainingWeightUseCase: getIt(),
-        analyzeProgressTrendsUseCase: getIt(),
-      ),
+    getIt.registerSingleton<GenerateStrengthPlanUseCase>(GenerateStrengthPlanUseCase());
+    getIt.registerSingleton<GenerateHypertrophyPlanUseCase>(GenerateHypertrophyPlanUseCase());
+    getIt.registerSingleton<GenerateWorkoutPlanUseCase>(
+      GenerateWorkoutPlanUseCase(generateStrengthPlanUseCase: getIt(), generateHypertrophyPlanUseCase: getIt()),
     );
 
     // Register repositories
     getIt.registerSingleton<WorkoutsRepository>(
-      WorkoutsRepository(exercisesManager: getIt(), workoutsManager: getIt(), workoutSetsManager: getIt(), progressionAlgorithm: getIt()),
+      WorkoutsRepository(
+        exercisesManager: getIt(),
+        workoutsManager: getIt(),
+        workoutSetsManager: getIt(),
+        analyzeProgressionUseCase: getIt(),
+        calculateOneRepMaxUseCase: getIt(),
+        calculateTrainingWeightUseCase: getIt(),
+        analyzeProgressTrendsUseCase: getIt(),
+        generateWorkoutPlanUseCase: getIt(),
+      ),
     );
 
     // Register cubits
     getIt.registerFactory<WorkoutsCubit>(() => WorkoutsCubit(repository: getIt()));
+    getIt.registerFactory<WorkoutSessionCubit>(WorkoutSessionCubit.new);
   }
 }

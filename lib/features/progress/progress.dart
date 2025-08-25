@@ -1,7 +1,13 @@
-export 'domain/entities/entities.dart';
+export 'domain/entities/progress_trend.dart';
+export 'domain/entities/progression_recommendation.dart';
+export 'domain/entities/workout_feedback.dart';
+export 'domain/entities/workout_plan.dart';
+export 'domain/entities/workout_step.dart';
 export 'domain/use_cases/analyze_progress_trends_use_case.dart';
 export 'domain/use_cases/analyze_progression_use_case.dart';
 export 'domain/use_cases/calculate_one_rep_max_use_case.dart';
 export 'domain/use_cases/calculate_training_weight_use_case.dart';
-export 'domain/use_cases/progression_algorithm_use_case.dart';
+export 'domain/use_cases/generate_hypertrophy_plan_use_case.dart';
+export 'domain/use_cases/generate_strength_plan_use_case.dart';
+export 'domain/use_cases/generate_workout_plan_use_case.dart';
 export 'ui/progress_screen.dart';

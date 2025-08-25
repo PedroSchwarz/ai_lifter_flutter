@@ -191,6 +191,16 @@ class WorkoutsCubit extends Cubit<WorkoutsState> {
       return null;
     }
   }
+
+  // Workout plan generation
+  Future<WorkoutPlan> generateWorkoutPlan({required WorkoutPlanRequest request}) async {
+    try {
+      return await repository.generateWorkoutPlan(request: request);
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+      rethrow;
+    }
+  }
 }
 
 @freezed

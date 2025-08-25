@@ -7,21 +7,30 @@ import 'package:lifter/features/workouts/workouts.dart';
 class WorkoutsRepository {
   @visibleForTesting
   final ExercisesManager exercisesManager;
-
   @visibleForTesting
   final WorkoutsManager workoutsManager;
-
   @visibleForTesting
   final WorkoutSetsManager workoutSetsManager;
-
   @visibleForTesting
-  final ProgressionAlgorithmUseCase progressionAlgorithm;
+  final AnalyzeProgressionUseCase analyzeProgressionUseCase;
+  @visibleForTesting
+  final CalculateOneRepMaxUseCase calculateOneRepMaxUseCase;
+  @visibleForTesting
+  final CalculateTrainingWeightUseCase calculateTrainingWeightUseCase;
+  @visibleForTesting
+  final AnalyzeProgressTrendsUseCase analyzeProgressTrendsUseCase;
+  @visibleForTesting
+  final GenerateWorkoutPlanUseCase generateWorkoutPlanUseCase;
 
   WorkoutsRepository({
     required this.exercisesManager,
     required this.workoutSetsManager,
     required this.workoutsManager,
-    required this.progressionAlgorithm,
+    required this.analyzeProgressionUseCase,
+    required this.calculateOneRepMaxUseCase,
+    required this.calculateTrainingWeightUseCase,
+    required this.analyzeProgressTrendsUseCase,
+    required this.generateWorkoutPlanUseCase,
   });
 
   // Exercise operations
@@ -106,12 +115,33 @@ class WorkoutsRepository {
     required int currentReps,
   }) async {
     final recentSets = await workoutSetsManager.getSetsForExercise(exerciseId);
-    return progressionAlgorithm.analyzeProgression(recentSets: recentSets, currentWeight: currentWeight, currentReps: currentReps);
+    return analyzeProgressionUseCase(recentSets: recentSets, currentWeight: currentWeight, currentReps: currentReps);
   }
 
   Future<Map<String, dynamic>> getProgressTrends() async {
     final allSets = await workoutSetsManager.getAllSets();
-    return progressionAlgorithm.analyzeProgressTrendsAsMap(allSets: allSets);
+    final progressList = analyzeProgressTrendsUseCase(allSets: allSets);
+
+    if (progressList.isEmpty) {
+      return {'trend': 'no_data', 'message': 'No training data available'};
+    }
+
+    final trends = <String, dynamic>{};
+    for (final progress in progressList) {
+      trends[progress.exerciseId.toString()] = {
+        'weight_progress_percentage': progress.weightProgressPercentage,
+        'trend': progress.trend.name,
+        'recent_avg_weight': progress.recentAvgWeight,
+        'older_avg_weight': progress.olderAvgWeight,
+      };
+    }
+
+    return trends;
+  }
+
+  // Workout plan generation
+  Future<WorkoutPlan> generateWorkoutPlan({required WorkoutPlanRequest request}) async {
+    return generateWorkoutPlanUseCase(request: request);
   }
 
   // Helper methods
