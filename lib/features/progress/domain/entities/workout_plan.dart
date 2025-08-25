@@ -1,63 +1,55 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lifter/features/progress/progress.dart';
+
+part 'workout_plan.freezed.dart';
+part 'workout_plan.g.dart';
+
 enum WorkoutPlanType { strength, hypertrophy, endurance, powerlifting, bodybuilding }
 
 enum ExerciseType { compound, isolation, cardio, flexibility }
 
 enum MuscleGroup { chest, back, legs, shoulders, arms, core, fullBody }
 
-class ExerciseRecommendation {
-  final int exerciseId;
-  final String exerciseName;
-  final ExerciseType exerciseType;
-  final int sets;
-  final int reps;
-  final double? weight;
-  final int? restSeconds;
-  final String? notes;
+@freezed
+abstract class ExerciseRecommendation with _$ExerciseRecommendation {
+  const factory ExerciseRecommendation({
+    required int exerciseId,
+    required String exerciseName,
+    required ExerciseType exerciseType,
+    required int sets,
+    required int reps,
+    double? weight,
+    int? restSeconds,
+    String? notes,
+  }) = _ExerciseRecommendation;
 
-  const ExerciseRecommendation({
-    required this.exerciseId,
-    required this.exerciseName,
-    required this.exerciseType,
-    required this.sets,
-    required this.reps,
-    this.weight,
-    this.restSeconds,
-    this.notes,
-  });
+  factory ExerciseRecommendation.fromJson(Map<String, dynamic> json) => _$ExerciseRecommendationFromJson(json);
 }
 
-class WorkoutPlan {
-  final String name;
-  final WorkoutPlanType type;
-  final String description;
-  final List<ExerciseRecommendation> exercises;
-  final int totalDuration; // in minutes
-  final String? notes;
+@freezed
+abstract class WorkoutPlan with _$WorkoutPlan {
+  const factory WorkoutPlan({
+    required String name,
+    required WorkoutPlanType type,
+    required String description,
+    required List<WorkoutStep> steps,
+    required int totalDurationInMinutes,
+    String? notes,
+  }) = _WorkoutPlan;
 
-  const WorkoutPlan({
-    required this.name,
-    required this.type,
-    required this.description,
-    required this.exercises,
-    required this.totalDuration,
-    this.notes,
-  });
+  factory WorkoutPlan.fromJson(Map<String, dynamic> json) => _$WorkoutPlanFromJson(json);
 }
 
-class WorkoutPlanRequest {
-  final WorkoutPlanType planType;
-  final MuscleGroup targetMuscleGroup;
-  final int workoutDuration; // in minutes
-  final List<int> availableExerciseIds;
-  final double? userWeight; // for weight calculations
-  final int? userExperienceLevel; // 1-5 scale
+@freezed
+abstract class WorkoutPlanRequest with _$WorkoutPlanRequest {
+  const factory WorkoutPlanRequest({
+    required WorkoutPlanType planType,
+    required MuscleGroup targetMuscleGroup,
+    required int workoutDurationInMinutes,
+    required List<int> availableExerciseIds,
+    double? userWeight,
+    int? userExperienceLevel,
+  }) = _WorkoutPlanRequest;
 
-  const WorkoutPlanRequest({
-    required this.planType,
-    required this.targetMuscleGroup,
-    required this.workoutDuration,
-    required this.availableExerciseIds,
-    this.userWeight,
-    this.userExperienceLevel,
-  });
+  factory WorkoutPlanRequest.fromJson(Map<String, dynamic> json) => _$WorkoutPlanRequestFromJson(json);
 }

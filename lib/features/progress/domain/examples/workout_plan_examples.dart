@@ -16,7 +16,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.strength,
       targetMuscleGroup: MuscleGroup.chest,
-      workoutDuration: 60,
+      workoutDurationInMinutes: 60,
       availableExerciseIds: [1, 8, 15], // Example exercise IDs
       userWeight: 80.0,
       userExperienceLevel: 3,
@@ -30,7 +30,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.hypertrophy,
       targetMuscleGroup: MuscleGroup.back,
-      workoutDuration: 75,
+      workoutDurationInMinutes: 75,
       availableExerciseIds: [2, 9, 16, 23], // Example exercise IDs
       userWeight: 75.0,
       userExperienceLevel: 2,
@@ -44,7 +44,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.endurance,
       targetMuscleGroup: MuscleGroup.legs,
-      workoutDuration: 45,
+      workoutDurationInMinutes: 45,
       availableExerciseIds: [3, 10, 17, 24, 31], // Example exercise IDs
       userWeight: 70.0,
       userExperienceLevel: 1,
@@ -58,7 +58,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.powerlifting,
       targetMuscleGroup: MuscleGroup.fullBody,
-      workoutDuration: 90,
+      workoutDurationInMinutes: 90,
       availableExerciseIds: [7, 14, 21, 28, 35], // Example exercise IDs
       userWeight: 85.0,
       userExperienceLevel: 4,
@@ -72,7 +72,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.bodybuilding,
       targetMuscleGroup: MuscleGroup.shoulders,
-      workoutDuration: 60,
+      workoutDurationInMinutes: 60,
       availableExerciseIds: [4, 11, 18, 25, 32], // Example exercise IDs
       userWeight: 78.0,
       userExperienceLevel: 3,
@@ -86,7 +86,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.strength,
       targetMuscleGroup: MuscleGroup.arms,
-      workoutDuration: 50,
+      workoutDurationInMinutes: 50,
       availableExerciseIds: [5, 12, 19, 26, 33], // Example exercise IDs
       userWeight: 72.0,
       userExperienceLevel: 2,
@@ -100,7 +100,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.endurance,
       targetMuscleGroup: MuscleGroup.core,
-      workoutDuration: 30,
+      workoutDurationInMinutes: 30,
       availableExerciseIds: [6, 13, 20, 27, 34], // Example exercise IDs
       userWeight: 68.0,
       userExperienceLevel: 1,
@@ -114,7 +114,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.hypertrophy,
       targetMuscleGroup: MuscleGroup.chest,
-      workoutDuration: 90, // Extended duration to include drop sets
+      workoutDurationInMinutes: 90, // Extended duration to include drop sets
       availableExerciseIds: [1, 8, 15, 22, 29], // Example exercise IDs
       userWeight: 82.0,
       userExperienceLevel: 4,
@@ -128,7 +128,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.powerlifting,
       targetMuscleGroup: MuscleGroup.legs,
-      workoutDuration: 80,
+      workoutDurationInMinutes: 80,
       availableExerciseIds: [3, 10, 17, 24, 31, 38, 45, 52], // Example exercise IDs
       userWeight: 88.0,
       userExperienceLevel: 5,
@@ -142,7 +142,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.endurance,
       targetMuscleGroup: MuscleGroup.fullBody,
-      workoutDuration: 60,
+      workoutDurationInMinutes: 60,
       availableExerciseIds: [7, 14, 21, 28, 35, 42, 49, 56], // Example exercise IDs
       userWeight: 73.0,
       userExperienceLevel: 2,
@@ -156,7 +156,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.strength,
       targetMuscleGroup: MuscleGroup.back,
-      workoutDuration: 65,
+      workoutDurationInMinutes: 65,
       availableExerciseIds: [2, 9, 16, 23, 30, 37, 44, 51], // Example exercise IDs
       userWeight: 76.0,
       userExperienceLevel: 3,
@@ -170,7 +170,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.hypertrophy,
       targetMuscleGroup: MuscleGroup.shoulders,
-      workoutDuration: 85, // Extended duration for advanced techniques
+      workoutDurationInMinutes: 85, // Extended duration for advanced techniques
       availableExerciseIds: [4, 11, 18, 25, 32, 39, 46, 53], // Example exercise IDs
       userWeight: 80.0,
       userExperienceLevel: 4,
@@ -184,7 +184,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.strength,
       targetMuscleGroup: MuscleGroup.core,
-      workoutDuration: 55,
+      workoutDurationInMinutes: 55,
       availableExerciseIds: [6, 13, 20, 27, 34, 41, 48, 55], // Example exercise IDs
       userWeight: 74.0,
       userExperienceLevel: 4,
@@ -198,7 +198,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.powerlifting,
       targetMuscleGroup: MuscleGroup.chest,
-      workoutDuration: 100, // Extended duration for competition prep
+      workoutDurationInMinutes: 100, // Extended duration for competition prep
       availableExerciseIds: [1, 8, 15, 22, 29, 36, 43, 50], // Example exercise IDs
       userWeight: 90.0,
       userExperienceLevel: 5,
@@ -212,7 +212,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.hypertrophy,
       targetMuscleGroup: MuscleGroup.back,
-      workoutDuration: 70,
+      workoutDurationInMinutes: 70,
       availableExerciseIds: [2, 9, 16, 23, 30, 37, 44, 51], // Example exercise IDs
       userWeight: 77.0,
       userExperienceLevel: 3,
@@ -226,7 +226,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.endurance,
       targetMuscleGroup: MuscleGroup.legs,
-      workoutDuration: 50,
+      workoutDurationInMinutes: 50,
       availableExerciseIds: [3, 10, 17, 24, 31, 38, 45, 52], // Example exercise IDs
       userWeight: 71.0,
       userExperienceLevel: 2,
@@ -240,7 +240,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.strength,
       targetMuscleGroup: MuscleGroup.fullBody,
-      workoutDuration: 45,
+      workoutDurationInMinutes: 45,
       availableExerciseIds: [7, 14, 21, 28, 35, 42, 49, 56], // Example exercise IDs
       userWeight: 65.0,
       userExperienceLevel: 1,
@@ -254,7 +254,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.hypertrophy,
       targetMuscleGroup: MuscleGroup.arms,
-      workoutDuration: 65,
+      workoutDurationInMinutes: 65,
       availableExerciseIds: [5, 12, 19, 26, 33, 40, 47, 54], // Example exercise IDs
       userWeight: 75.0,
       userExperienceLevel: 3,
@@ -268,7 +268,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.endurance,
       targetMuscleGroup: MuscleGroup.core,
-      workoutDuration: 35,
+      workoutDurationInMinutes: 35,
       availableExerciseIds: [6, 13, 20, 27, 34, 41, 48, 55], // Example exercise IDs
       userWeight: 69.0,
       userExperienceLevel: 2,
@@ -282,7 +282,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.powerlifting,
       targetMuscleGroup: MuscleGroup.shoulders,
-      workoutDuration: 75,
+      workoutDurationInMinutes: 75,
       availableExerciseIds: [4, 11, 18, 25, 32, 39, 46, 53], // Example exercise IDs
       userWeight: 83.0,
       userExperienceLevel: 4,
@@ -296,7 +296,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.endurance,
       targetMuscleGroup: MuscleGroup.chest,
-      workoutDuration: 40,
+      workoutDurationInMinutes: 40,
       availableExerciseIds: [1, 8, 15, 22, 29, 36, 43, 50], // Example exercise IDs
       userWeight: 68.0,
       userExperienceLevel: 2,
@@ -310,7 +310,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.strength,
       targetMuscleGroup: MuscleGroup.back,
-      workoutDuration: 60,
+      workoutDurationInMinutes: 60,
       availableExerciseIds: [2, 9, 16, 23, 30, 37, 44, 51], // Example exercise IDs
       userWeight: 72.0,
       userExperienceLevel: 3,
@@ -324,7 +324,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.hypertrophy,
       targetMuscleGroup: MuscleGroup.legs,
-      workoutDuration: 80,
+      workoutDurationInMinutes: 80,
       availableExerciseIds: [3, 10, 17, 24, 31, 38, 45, 52], // Example exercise IDs
       userWeight: 79.0,
       userExperienceLevel: 4,
@@ -338,7 +338,7 @@ class WorkoutPlanExamples {
     const request = WorkoutPlanRequest(
       planType: WorkoutPlanType.endurance,
       targetMuscleGroup: MuscleGroup.fullBody,
-      workoutDuration: 55,
+      workoutDurationInMinutes: 55,
       availableExerciseIds: [7, 14, 21, 28, 35, 42, 49, 56], // Example exercise IDs
       userWeight: 74.0,
       userExperienceLevel: 3,

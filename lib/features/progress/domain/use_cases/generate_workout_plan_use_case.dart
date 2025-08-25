@@ -1,6 +1,4 @@
-import 'package:lifter/features/progress/domain/entities/workout_plan.dart';
-import 'package:lifter/features/progress/domain/use_cases/generate_hypertrophy_plan_use_case.dart';
-import 'package:lifter/features/progress/domain/use_cases/generate_strength_plan_use_case.dart';
+import 'package:lifter/features/progress/progress.dart';
 
 /// Main use case that orchestrates workout plan generation based on plan type
 class GenerateWorkoutPlanUseCase {
@@ -38,12 +36,26 @@ class GenerateWorkoutPlanUseCase {
     // Cardio component
     exercises.add(_getCardioExercise(request.targetMuscleGroup, 2, 30, 30));
 
+    final steps = <WorkoutStep>[];
+
+    for (final exercise in exercises) {
+      for (var i = 0; i < exercise.sets; i++) {
+        steps.add(WorkoutStep.exercise(exercise: exercise, setNumber: i + 1));
+
+        if (exercise == exercises.last && i == exercise.sets - 1) {
+          continue;
+        }
+
+        steps.add(WorkoutStep.transition(transition: WorkoutTransition.rest(restDuration: Duration(seconds: exercise.restSeconds ?? 120))));
+      }
+    }
+
     return WorkoutPlan(
       name: 'Endurance Training - ${request.targetMuscleGroup.name}',
       type: WorkoutPlanType.endurance,
       description: 'Focus on muscular endurance with high reps and short rest periods',
-      exercises: exercises,
-      totalDuration: request.workoutDuration,
+      steps: steps,
+      totalDurationInMinutes: request.workoutDurationInMinutes,
       notes: 'Rest 30-60 seconds between sets. Focus on maintaining form throughout high reps.',
     );
   }
@@ -61,12 +73,26 @@ class GenerateWorkoutPlanUseCase {
     // Accessory work (5-8 reps)
     exercises.add(_getPowerliftingAccessory(request.targetMuscleGroup, 3, 8, 120));
 
+    final steps = <WorkoutStep>[];
+
+    for (final exercise in exercises) {
+      for (var i = 0; i < exercise.sets; i++) {
+        steps.add(WorkoutStep.exercise(exercise: exercise, setNumber: i + 1));
+
+        if (exercise == exercises.last && i == exercise.sets - 1) {
+          continue;
+        }
+
+        steps.add(WorkoutStep.transition(transition: WorkoutTransition.rest(restDuration: Duration(seconds: exercise.restSeconds ?? 180))));
+      }
+    }
+
     return WorkoutPlan(
       name: 'Powerlifting Training - ${request.targetMuscleGroup.name}',
       type: WorkoutPlanType.powerlifting,
       description: 'Focus on maximal strength with low reps and long rest periods',
-      exercises: exercises,
-      totalDuration: request.workoutDuration,
+      steps: steps,
+      totalDurationInMinutes: request.workoutDurationInMinutes,
       notes: 'Rest 3-5 minutes between main lifts. Focus on maximal effort and perfect form.',
     );
   }

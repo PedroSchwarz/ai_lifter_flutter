@@ -1,4 +1,4 @@
-import 'package:lifter/features/progress/domain/entities/workout_plan.dart';
+import 'package:lifter/features/progress/progress.dart';
 
 /// Use case for generating hypertrophy-focused workout plans
 /// Implements higher volume training with moderate weights (8-12 reps)
@@ -7,12 +7,26 @@ class GenerateHypertrophyPlanUseCase {
   WorkoutPlan call({required WorkoutPlanRequest request}) {
     final exercises = _generateHypertrophyExercises(request);
 
+    final steps = <WorkoutStep>[];
+
+    for (final exercise in exercises) {
+      for (var i = 0; i < exercise.sets; i++) {
+        steps.add(WorkoutStep.exercise(exercise: exercise, setNumber: i + 1));
+
+        if (exercise == exercises.last && i == exercise.sets - 1) {
+          continue;
+        }
+
+        steps.add(WorkoutStep.transition(transition: WorkoutTransition.rest(restDuration: Duration(seconds: exercise.restSeconds ?? 90))));
+      }
+    }
+
     return WorkoutPlan(
       name: 'Hypertrophy Training - ${request.targetMuscleGroup.name}',
       type: WorkoutPlanType.hypertrophy,
       description: 'Focus on muscle growth with higher volume and moderate weights (8-12 reps)',
-      exercises: exercises,
-      totalDuration: request.workoutDuration,
+      steps: steps,
+      totalDurationInMinutes: request.workoutDurationInMinutes,
       notes: 'Rest 60-90 seconds between sets. Focus on mind-muscle connection and controlled movements.',
     );
   }
@@ -33,7 +47,7 @@ class GenerateHypertrophyPlanUseCase {
     exercises.add(_getSecondIsolationExercise(request.targetMuscleGroup, 3, 15, 60));
 
     // Optional: Drop set or superset
-    if (request.workoutDuration > 60) {
+    if (request.workoutDurationInMinutes > 60) {
       exercises.add(_getDropSetExercise(request.targetMuscleGroup, 2, 15, 45));
     }
 

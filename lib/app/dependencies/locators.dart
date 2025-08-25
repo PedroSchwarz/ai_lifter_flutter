@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:lifter/app/app.dart';
 import 'package:lifter/features/progress/progress.dart';
+import 'package:lifter/features/workout_session/workout_session.dart';
 import 'package:lifter/features/workouts/workouts.dart';
 import 'package:meta/meta.dart';
 
@@ -57,5 +58,6 @@ class Locator extends BaseServiceLocator {
 
     // Register cubits
     getIt.registerFactory<WorkoutsCubit>(() => WorkoutsCubit(repository: getIt()));
+    getIt.registerFactory<WorkoutSessionCubit>(WorkoutSessionCubit.new);
   }
 }

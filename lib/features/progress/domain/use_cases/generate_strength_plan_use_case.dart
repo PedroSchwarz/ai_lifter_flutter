@@ -1,4 +1,4 @@
-import 'package:lifter/features/progress/domain/entities/workout_plan.dart';
+import 'package:lifter/features/progress/progress.dart';
 
 /// Use case for generating strength-focused workout plans
 /// Implements 5x5 methodology and compound exercise focus
@@ -7,12 +7,26 @@ class GenerateStrengthPlanUseCase {
   WorkoutPlan call({required WorkoutPlanRequest request}) {
     final exercises = _generateStrengthExercises(request);
 
+    final steps = <WorkoutStep>[];
+
+    for (final exercise in exercises) {
+      for (var i = 0; i < exercise.sets; i++) {
+        steps.add(WorkoutStep.exercise(exercise: exercise, setNumber: i + 1));
+
+        if (exercise == exercises.last && i == exercise.sets - 1) {
+          continue;
+        }
+
+        steps.add(WorkoutStep.transition(transition: WorkoutTransition.rest(restDuration: Duration(seconds: exercise.restSeconds ?? 180))));
+      }
+    }
+
     return WorkoutPlan(
       name: 'Strength Training - ${request.targetMuscleGroup.name}',
       type: WorkoutPlanType.strength,
       description: 'Focus on compound movements with 5x5 sets for maximum strength gains',
-      exercises: exercises,
-      totalDuration: request.workoutDuration,
+      steps: steps,
+      totalDurationInMinutes: request.workoutDurationInMinutes,
       notes: 'Rest 3-5 minutes between sets. Focus on form and progressive overload.',
     );
   }
