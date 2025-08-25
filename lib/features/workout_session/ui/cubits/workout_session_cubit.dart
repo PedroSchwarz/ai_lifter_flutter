@@ -14,6 +14,12 @@ class WorkoutSessionCubit extends Cubit<WorkoutSessionState> {
   Timer? _restTimer;
   final Stopwatch _restStopwatch = Stopwatch();
 
+  @override
+  Future<void> close() {
+    _restTimer?.cancel();
+    return super.close();
+  }
+
   void load({required WorkoutPlan workoutPlan}) {
     final steps = workoutPlan.steps;
     final firstStep = steps.first;
@@ -42,11 +48,7 @@ class WorkoutSessionCubit extends Cubit<WorkoutSessionState> {
       final currentStepIndex = currentState.currentStepIndex;
       final nextStepIndex = currentStepIndex + 1;
 
-      if (currentStepIndex == -1) {
-        return;
-      }
-
-      if (currentStepIndex == currentState.workoutPlan.steps.length - 1) {
+      if (nextStepIndex >= currentState.workoutPlan.steps.length) {
         emit(currentState.copyWith(hasSessionFinished: true));
         return;
       }
@@ -101,13 +103,7 @@ class WorkoutSessionCubit extends Cubit<WorkoutSessionState> {
 
         final feedback = currentState.workoutFeedbacks.firstWhereOrNull((feedback) => feedback.exercise == exercise && feedback.set == set);
 
-        if (feedback == null) {
-          return false;
-        }
-
-        if (feedback.performance == performance) {
-          return true;
-        }
+        return feedback?.performance == performance;
       }
     }
 

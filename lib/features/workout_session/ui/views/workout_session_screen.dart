@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -7,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:lifter/app/dependencies/locators.dart';
 import 'package:lifter/app/theming/spacing.dart';
 import 'package:lifter/features/progress/progress.dart';
-import 'package:lifter/features/workout_session/ui/cubits/workout_session_cubit.dart';
 import 'package:lifter/features/workout_session/workout_session.dart';
 
 class WorkoutSessionScreen extends StatefulWidget {
@@ -51,38 +48,15 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
               if (current is WorkoutSessionLoaded) {
                 return (previous as WorkoutSessionLoaded).hasSessionFinished != current.hasSessionFinished;
               }
-
               return false;
             },
             listener: (context, state) {
-              if (state is WorkoutSessionLoaded) {
-                if (state.hasSessionFinished) {
-                  showDialog(
-                    context: context,
-                    builder: (dialogContext) {
-                      return AlertDialog(
-                        title: const Text('Session Finished'),
-                        content: const Text('You have completed the session.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              dialogContext.pop();
-                              cubit.resetFinishedSession();
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
+              if (state is WorkoutSessionLoaded && state.hasSessionFinished) {
+                _showSessionFinishedDialog();
               }
             },
             child: Scaffold(
-              appBar: AppBar(
-                title: Text(state.workoutPlan.name),
-                actions: [CircleAvatar(child: Text(state.workoutPlan.totalDurationInMinutes.toString()))],
-              ),
+              appBar: AppBar(title: Text(state.workoutPlan.name)),
               body: Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 child: Column(
@@ -93,7 +67,6 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                         if (current is WorkoutSessionLoaded) {
                           return previous != current;
                         }
-
                         return false;
                       },
                       builder: (context, state) {
@@ -110,19 +83,10 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               spacing: AppSpacing.md,
                               children: [
-                                switch (step) {
-                                  WorkoutStepTransition() => Text(
-                                    '${nextExerciseStep.exercise.exerciseName} - Set ${nextExerciseStep.setNumber}',
-                                    style: theme.textTheme.titleLarge,
-                                  ),
-                                  WorkoutStepExercise() => Text(step.exercise.exerciseName, style: theme.textTheme.titleLarge),
-                                },
+                                Text(_getExerciseDisplayName(step, nextExerciseStep), style: theme.textTheme.titleLarge),
                                 Chip(
                                   backgroundColor: theme.colorScheme.inversePrimary,
-                                  label: Text(switch (step) {
-                                    WorkoutStepExercise() => '${step.exercise.sets} X ${step.exercise.reps}',
-                                    WorkoutStepTransition() => '${nextExerciseStep.exercise.sets} X ${nextExerciseStep.exercise.reps}',
-                                  }, style: theme.textTheme.bodyLarge),
+                                  label: Text(_getExerciseRepsDisplay(step, nextExerciseStep), style: theme.textTheme.bodyLarge),
                                 ),
                               ],
                             ),
@@ -130,20 +94,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                switch (step) {
-                                  WorkoutStepExercise() => Text(step.exercise.exerciseType.name.toUpperCase()),
-                                  WorkoutStepTransition() => Text(nextExerciseStep.exercise.exerciseType.name.toUpperCase()),
-                                },
-                                if (switch (step) {
-                                  WorkoutStepExercise() => step.exercise.weight != null,
-                                  WorkoutStepTransition() => nextExerciseStep.exercise.weight != null,
-                                })
-                                  Text(
-                                    'Suggested Weight of: ${switch (step) {
-                                      WorkoutStepExercise() => step.exercise.weight,
-                                      WorkoutStepTransition() => nextExerciseStep.exercise.weight,
-                                    }}kg',
-                                  ),
+                                Text(_getExerciseTypeDisplay(step, nextExerciseStep).toUpperCase()),
+                                if (_hasSuggestedWeight(step, nextExerciseStep))
+                                  Text('Suggested Weight of: ${_getSuggestedWeight(step, nextExerciseStep)}kg'),
                               ],
                             ),
                           ],
@@ -219,7 +172,6 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                     if (current is WorkoutSessionLoaded) {
                       return previous != current;
                     }
-
                     return false;
                   },
                   builder: (context, state) {
@@ -237,13 +189,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                             ),
                           ),
                         Expanded(
-                          child: OutlinedButton(
-                            onPressed: cubit.canGoToNextStep ? cubit.setNextStep : null,
-                            child: switch (step) {
-                              WorkoutStepExercise() => const Text('Next'),
-                              WorkoutStepTransition() => const Text('Skip Rest'),
-                            },
-                          ),
+                          child: OutlinedButton(onPressed: cubit.canGoToNextStep ? cubit.setNextStep : null, child: Text(_getNextButtonText(step))),
                         ),
                       ],
                     );
@@ -257,5 +203,69 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         return Scaffold(appBar: AppBar(title: const Text('Loading Session...')));
       },
     );
+  }
+
+  void _showSessionFinishedDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Session Finished'),
+          content: const Text('You have completed the session.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                dialogContext.pop();
+                cubit.resetFinishedSession();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Helper methods to reduce code duplication
+  String _getExerciseDisplayName(WorkoutStep step, WorkoutStepExercise nextExerciseStep) {
+    return switch (step) {
+      WorkoutStepTransition() => '${nextExerciseStep.exercise.exerciseName} - Set ${nextExerciseStep.setNumber}',
+      WorkoutStepExercise() => step.exercise.exerciseName,
+    };
+  }
+
+  String _getExerciseRepsDisplay(WorkoutStep step, WorkoutStepExercise nextExerciseStep) {
+    return switch (step) {
+      WorkoutStepExercise() => '${step.exercise.sets} X ${step.exercise.reps}',
+      WorkoutStepTransition() => '${nextExerciseStep.exercise.sets} X ${nextExerciseStep.exercise.reps}',
+    };
+  }
+
+  String _getExerciseTypeDisplay(WorkoutStep step, WorkoutStepExercise nextExerciseStep) {
+    return switch (step) {
+      WorkoutStepExercise() => step.exercise.exerciseType.name,
+      WorkoutStepTransition() => nextExerciseStep.exercise.exerciseType.name,
+    };
+  }
+
+  bool _hasSuggestedWeight(WorkoutStep step, WorkoutStepExercise nextExerciseStep) {
+    return switch (step) {
+      WorkoutStepExercise() => step.exercise.weight != null,
+      WorkoutStepTransition() => nextExerciseStep.exercise.weight != null,
+    };
+  }
+
+  double? _getSuggestedWeight(WorkoutStep step, WorkoutStepExercise nextExerciseStep) {
+    return switch (step) {
+      WorkoutStepExercise() => step.exercise.weight,
+      WorkoutStepTransition() => nextExerciseStep.exercise.weight,
+    };
+  }
+
+  String _getNextButtonText(WorkoutStep step) {
+    return switch (step) {
+      WorkoutStepExercise() => 'Next',
+      WorkoutStepTransition() => 'Skip Rest',
+    };
   }
 }
