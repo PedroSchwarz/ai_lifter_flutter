@@ -1,4 +1,5 @@
-import 'package:lifter/features/progress/progress.dart';
+import 'package:lifter/features/workout_session/workout_session.dart';
+import 'package:lifter/features/workouts/workouts.dart';
 
 /// Main use case that orchestrates workout plan generation based on plan type
 class GenerateWorkoutPlanUseCase {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lifter/app/app.dart';
-import 'package:lifter/features/progress/progress.dart';
+import 'package:lifter/features/workout_session/workout_session.dart';
+import 'package:lifter/features/workouts/workouts.dart';
 
 class GeneratedWorkoutPlanDialog extends StatelessWidget {
   final WorkoutPlan workoutPlan;

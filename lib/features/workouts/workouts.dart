@@ -6,6 +6,8 @@ export 'data/data_sources/local/tables/exercises_table.dart';
 export 'data/data_sources/local/tables/workout_sets_table.dart';
 export 'data/data_sources/local/tables/workouts_table.dart';
 export 'data/workouts_repository.dart';
+export 'domain/entities/workout_plan.dart';
+export 'domain/examples/workout_plan_examples.dart';
 export 'ui/cubits/workouts_cubit.dart';
 export 'ui/views/components/generated_workout_plan_dialog.dart';
 export 'ui/views/components/workout_plan_card.dart';

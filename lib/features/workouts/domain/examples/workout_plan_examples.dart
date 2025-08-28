@@ -1,7 +1,7 @@
-import 'package:lifter/features/progress/domain/entities/workout_plan.dart';
-import 'package:lifter/features/progress/domain/use_cases/generate_hypertrophy_plan_use_case.dart';
-import 'package:lifter/features/progress/domain/use_cases/generate_strength_plan_use_case.dart';
-import 'package:lifter/features/progress/domain/use_cases/generate_workout_plan_use_case.dart';
+import 'package:lifter/features/workout_session/domain/use_cases/generate_hypertrophy_plan_use_case.dart';
+import 'package:lifter/features/workout_session/domain/use_cases/generate_strength_plan_use_case.dart';
+import 'package:lifter/features/workout_session/domain/use_cases/generate_workout_plan_use_case.dart';
+import 'package:lifter/features/workouts/domain/entities/workout_plan.dart';
 
 /// Example usage of the workout plan generation system
 /// This demonstrates how to create different types of workout plans

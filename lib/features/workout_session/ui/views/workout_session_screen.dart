@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lifter/app/dependencies/locators.dart';
 import 'package:lifter/app/theming/spacing.dart';
-import 'package:lifter/features/progress/progress.dart';
 import 'package:lifter/features/workout_session/workout_session.dart';
+import 'package:lifter/features/workouts/workouts.dart';
 
 class WorkoutSessionScreen extends StatefulWidget {
   final WorkoutPlan workoutPlan;
@@ -208,10 +210,11 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   void _showSessionFinishedDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Session Finished'),
-          content: const Text('You have completed the session.'),
+          title: const Text('Session Complete'),
+          content: const Text('Congratulations! You have completed your workout session.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -220,10 +223,46 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
               },
               child: const Text('OK'),
             ),
+            FilledButton(
+              onPressed: () async {
+                dialogContext.pop();
+                cubit.resetFinishedSession();
+                await Future.delayed(const Duration(milliseconds: 300));
+                _showProgressionRecommendations();
+              },
+              child: const Text('View Progress'),
+            ),
           ],
         );
       },
     );
+  }
+
+  void _showProgressionRecommendations() {
+    final recommendations = cubit.getProgressionRecommendations();
+    final performanceSummaries = cubit.getAllExercisePerformanceSummaries();
+
+    if (recommendations.isNotEmpty) {
+      final recommendationsJson = jsonEncode(recommendations.map((key, value) => MapEntry(key.toString(), value.toJson())));
+      final performanceSummariesJson = jsonEncode(performanceSummaries.map((key, value) => MapEntry(key.toString(), value.toJson())));
+
+      context.pushNamed(
+        ProgressionRecommendationsScreen.routeName,
+        queryParameters: {'recommendations': recommendationsJson, 'performance_summaries': performanceSummariesJson},
+      );
+    } else {
+      // Show a simple message if no recommendations available
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text('No Progression Data'),
+            content: const Text('Complete more sets to get personalized progression recommendations.'),
+            actions: [TextButton(onPressed: () => dialogContext.pop(), child: const Text('OK'))],
+          );
+        },
+      );
+    }
   }
 
   // Helper methods to reduce code duplication

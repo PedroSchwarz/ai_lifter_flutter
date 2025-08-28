@@ -2,13 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lifter/app/app.dart';
-import 'package:lifter/features/progress/progress.dart';
 import 'package:lifter/features/workout_session/workout_session.dart';
-import 'package:lifter/features/workouts/ui/views/components/generated_workout_plan_dialog.dart';
-import 'package:lifter/features/workouts/ui/views/components/workout_plan_card.dart';
-import 'package:lifter/features/workouts/ui/views/components/workout_plan_options.dart';
 import 'package:lifter/features/workouts/workouts.dart';
 
 class WorkoutsScreen extends StatefulWidget {
@@ -66,134 +63,143 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
             );
           }
 
-          return Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Welcome to Lifter', style: Theme.of(context).textTheme.headlineMedium),
-                const SizedBox(height: AppSpacing.lg),
-
-                // Quick Actions
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Quick Actions', style: Theme.of(context).textTheme.titleMedium),
-                        const SizedBox(height: AppSpacing.sm),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  // TODO: Navigate to create workout
-                                },
-                                icon: const Icon(Icons.add),
-                                label: const Text('New Workout'),
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.sm),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  // TODO: Navigate to exercises
-                                },
-                                icon: const Icon(Icons.fitness_center),
-                                label: const Text('Exercises'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: AppSpacing.lg),
-
-                // Suggested Workout Plans
-                Text('Suggested Workout Plans', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: AppSpacing.sm),
-
-                SizedBox(
-                  height: 200,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Gap(AppSpacing.md),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: Text('Welcome to Lifter', style: Theme.of(context).textTheme.headlineMedium),
+              ),
+              const Gap(AppSpacing.lg),
+              // Quick Actions
+              Card(
+                margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WorkoutPlanCard(
-                        title: 'Strength Training',
-                        description: '5x5 compound movements for maximum strength gains',
-                        icon: Icons.fitness_center,
-                        color: Colors.blue,
-                        onTap: () => _showWorkoutPlanOptions(context, 'Strength'),
-                      ),
-                      WorkoutPlanCard(
-                        title: 'Hypertrophy',
-                        description: 'High volume training for muscle growth',
-                        icon: Icons.trending_up,
-                        color: Colors.green,
-                        onTap: () => _showWorkoutPlanOptions(context, 'Hypertrophy'),
-                      ),
-                      WorkoutPlanCard(
-                        title: 'Endurance',
-                        description: 'High rep training for stamina and endurance',
-                        icon: Icons.timer,
-                        color: Colors.orange,
-                        onTap: () => _showWorkoutPlanOptions(context, 'Endurance'),
-                      ),
-                      WorkoutPlanCard(
-                        title: 'Powerlifting',
-                        description: 'Maximal strength with heavy compound lifts',
-                        icon: Icons.whatshot,
-                        color: Colors.red,
-                        onTap: () => _showWorkoutPlanOptions(context, 'Powerlifting'),
-                      ),
-                      WorkoutPlanCard(
-                        title: 'Bodybuilding',
-                        description: 'Aesthetic focus with isolation movements',
-                        icon: Icons.self_improvement,
-                        color: Colors.purple,
-                        onTap: () => _showWorkoutPlanOptions(context, 'Bodybuilding'),
+                      Text('Quick Actions', style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: AppSpacing.sm),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                // TODO: Navigate to create workout
+                              },
+                              icon: const Icon(Icons.add),
+                              label: const Text('New Workout'),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                // TODO: Navigate to exercises
+                              },
+                              icon: const Icon(Icons.fitness_center),
+                              label: const Text('Exercises'),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
+              ),
 
-                const SizedBox(height: AppSpacing.lg),
+              const Gap(AppSpacing.lg),
 
-                // Recent Workouts
-                Text('Recent Workouts', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: AppSpacing.sm),
+              // Suggested Workout Plans
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: Text('Suggested Workout Plans', style: Theme.of(context).textTheme.titleMedium),
+              ),
+              const Gap(AppSpacing.sm),
 
-                if (state.workouts.isEmpty)
-                  const Card(
-                    child: Padding(padding: EdgeInsets.all(AppSpacing.lg), child: Center(child: Text('No workouts yet. Create your first workout!'))),
-                  )
-                else
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: state.workouts.length,
-                      itemBuilder: (context, index) {
-                        final workout = state.workouts[index];
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                          child: ListTile(
-                            title: Text(workout.name),
-                            subtitle: Text('${workout.date.day}/${workout.date.month}/${workout.date.year}'),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () {
-                              cubit.selectWorkout(workout);
-                              // TODO: Navigate to workout details
-                            },
-                          ),
-                        );
-                      },
+              SizedBox(
+                height: 232,
+                child: ListView(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    WorkoutPlanCard(
+                      title: 'Strength Training',
+                      description: '5x5 compound movements for maximum strength gains',
+                      icon: Icons.fitness_center,
+                      color: Colors.blue,
+                      onTap: () => _showWorkoutPlanOptions(context, 'Strength'),
                     ),
+                    WorkoutPlanCard(
+                      title: 'Hypertrophy',
+                      description: 'High volume training for muscle growth',
+                      icon: Icons.trending_up,
+                      color: Colors.green,
+                      onTap: () => _showWorkoutPlanOptions(context, 'Hypertrophy'),
+                    ),
+                    WorkoutPlanCard(
+                      title: 'Endurance',
+                      description: 'High rep training for stamina and endurance',
+                      icon: Icons.timer,
+                      color: Colors.orange,
+                      onTap: () => _showWorkoutPlanOptions(context, 'Endurance'),
+                    ),
+                    WorkoutPlanCard(
+                      title: 'Powerlifting',
+                      description: 'Maximal strength with heavy compound lifts',
+                      icon: Icons.whatshot,
+                      color: Colors.red,
+                      onTap: () => _showWorkoutPlanOptions(context, 'Powerlifting'),
+                    ),
+                    WorkoutPlanCard(
+                      title: 'Bodybuilding',
+                      description: 'Aesthetic focus with isolation movements',
+                      icon: Icons.self_improvement,
+                      color: Colors.purple,
+                      onTap: () => _showWorkoutPlanOptions(context, 'Bodybuilding'),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Gap(AppSpacing.lg),
+
+              // Recent Workouts
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: Text('Recent Workouts', style: Theme.of(context).textTheme.titleMedium),
+              ),
+              const Gap(AppSpacing.sm),
+
+              if (state.workouts.isEmpty)
+                const Card(
+                  margin: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                  child: Padding(padding: EdgeInsets.all(AppSpacing.lg), child: Center(child: Text('No workouts yet. Create your first workout!'))),
+                )
+              else
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: state.workouts.length,
+                    itemBuilder: (context, index) {
+                      final workout = state.workouts[index];
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: ListTile(
+                          title: Text(workout.name),
+                          subtitle: Text('${workout.date.day}/${workout.date.month}/${workout.date.year}'),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            cubit.selectWorkout(workout);
+                            // TODO: Navigate to workout details
+                          },
+                        ),
+                      );
+                    },
                   ),
-              ],
-            ),
+                ),
+            ],
           );
         },
       ),

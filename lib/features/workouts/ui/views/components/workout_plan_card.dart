@@ -13,7 +13,6 @@ class WorkoutPlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(right: AppSpacing.sm),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),

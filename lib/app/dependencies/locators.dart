@@ -41,6 +41,7 @@ class Locator extends BaseServiceLocator {
     getIt.registerSingleton<GenerateWorkoutPlanUseCase>(
       GenerateWorkoutPlanUseCase(generateStrengthPlanUseCase: getIt(), generateHypertrophyPlanUseCase: getIt()),
     );
+    getIt.registerSingleton<AnalyzeWorkoutFeedbackProgressionUseCase>(AnalyzeWorkoutFeedbackProgressionUseCase());
 
     // Register repositories
     getIt.registerSingleton<WorkoutsRepository>(
@@ -58,6 +59,6 @@ class Locator extends BaseServiceLocator {
 
     // Register cubits
     getIt.registerFactory<WorkoutsCubit>(() => WorkoutsCubit(repository: getIt()));
-    getIt.registerFactory<WorkoutSessionCubit>(WorkoutSessionCubit.new);
+    getIt.registerFactory<WorkoutSessionCubit>(() => WorkoutSessionCubit(analyzeWorkoutFeedbackProgressionUseCase: getIt()));
   }
 }

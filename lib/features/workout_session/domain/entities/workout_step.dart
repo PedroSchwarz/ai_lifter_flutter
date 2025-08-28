@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lifter/features/progress/progress.dart';
+import 'package:lifter/features/workouts/workouts.dart';
 
 part 'workout_step.freezed.dart';
 part 'workout_step.g.dart';
