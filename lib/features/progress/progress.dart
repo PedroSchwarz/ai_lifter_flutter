@@ -8,3 +8,4 @@ export 'domain/use_cases/analyze_workout_feedback_progression_use_case.dart';
 export 'domain/use_cases/calculate_one_rep_max_use_case.dart';
 export 'domain/use_cases/calculate_training_weight_use_case.dart';
 export 'ui/progress_screen.dart';
+export 'ui/progression_recommendations_screen.dart';

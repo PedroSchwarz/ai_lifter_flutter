@@ -5,5 +5,4 @@ export 'domain/use_cases/generate_strength_plan_use_case.dart';
 export 'domain/use_cases/generate_workout_plan_use_case.dart';
 export 'ui/cubits/workout_session_cubit.dart';
 export 'ui/views/components/session_timer.dart';
-export 'ui/views/progression_recommendations_screen.dart';
 export 'ui/views/workout_session_screen.dart';

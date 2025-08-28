@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lifter/app/dependencies/locators.dart';
 import 'package:lifter/app/theming/spacing.dart';
+import 'package:lifter/features/progress/progress.dart';
 import 'package:lifter/features/workout_session/workout_session.dart';
 import 'package:lifter/features/workouts/workouts.dart';
 
