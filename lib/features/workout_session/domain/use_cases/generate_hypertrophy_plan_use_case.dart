@@ -1,4 +1,5 @@
-import 'package:lifter/features/progress/progress.dart';
+import 'package:lifter/features/workout_session/workout_session.dart';
+import 'package:lifter/features/workouts/workouts.dart';
 
 /// Use case for generating hypertrophy-focused workout plans
 /// Implements higher volume training with moderate weights (8-12 reps)

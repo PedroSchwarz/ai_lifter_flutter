@@ -5,11 +5,16 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lifter/features/progress/progress.dart';
+import 'package:lifter/features/workout_session/workout_session.dart';
+import 'package:lifter/features/workouts/workouts.dart';
 
 part 'workout_session_cubit.freezed.dart';
 
 class WorkoutSessionCubit extends Cubit<WorkoutSessionState> {
-  WorkoutSessionCubit() : super(const WorkoutSessionState.started());
+  @visibleForTesting
+  final AnalyzeWorkoutFeedbackProgressionUseCase analyzeWorkoutFeedbackProgressionUseCase;
+
+  WorkoutSessionCubit({required this.analyzeWorkoutFeedbackProgressionUseCase}) : super(const WorkoutSessionState.started());
 
   Timer? _restTimer;
   final Stopwatch _restStopwatch = Stopwatch();
@@ -169,6 +174,97 @@ class WorkoutSessionCubit extends Cubit<WorkoutSessionState> {
     }
 
     return false;
+  }
+
+  /// Analyzes progression for a specific exercise based on workout feedback
+  ProgressionRecommendation? analyzeExerciseProgression(ExerciseRecommendation exercise) {
+    final currentState = state;
+
+    if (currentState is WorkoutSessionLoaded) {
+      return analyzeWorkoutFeedbackProgressionUseCase(workoutFeedbacks: currentState.workoutFeedbacks, exercise: exercise);
+    }
+
+    return null;
+  }
+
+  /// Gets progression recommendations for all exercises in the workout
+  Map<int, ProgressionRecommendation> getProgressionRecommendations() {
+    final currentState = state;
+    final recommendations = <int, ProgressionRecommendation>{};
+
+    if (currentState is WorkoutSessionLoaded) {
+      // Get unique exercises from the workout plan
+      final exercises = currentState.workoutPlan.steps.whereType<WorkoutStepExercise>().map((step) => step.exercise).toSet();
+
+      // Analyze progression for each exercise
+      for (final exercise in exercises) {
+        final recommendation = analyzeExerciseProgression(exercise);
+        if (recommendation != null) {
+          recommendations[exercise.exerciseId] = recommendation;
+        }
+      }
+    }
+
+    return recommendations;
+  }
+
+  /// Gets performance summary for a specific exercise
+  ExercisePerformanceSummary? getExercisePerformanceSummary(ExerciseRecommendation exercise) {
+    final currentState = state;
+
+    if (currentState is WorkoutSessionLoaded) {
+      final exerciseFeedbacks = currentState.workoutFeedbacks.where((feedback) => feedback.exercise.exerciseId == exercise.exerciseId).toList();
+
+      if (exerciseFeedbacks.isEmpty) return null;
+
+      // Sort by set number
+      exerciseFeedbacks.sort((a, b) => a.set.compareTo(b.set));
+
+      // Count performance types
+      final underperformedCount = exerciseFeedbacks.where((f) => f.performance == WorkoutFeedbackPerformance.underperformed).length;
+      final performedCount = exerciseFeedbacks.where((f) => f.performance == WorkoutFeedbackPerformance.performed).length;
+      final overperformedCount = exerciseFeedbacks.where((f) => f.performance == WorkoutFeedbackPerformance.overperformed).length;
+
+      final totalSets = exerciseFeedbacks.length;
+      final completionRate = totalSets / exercise.sets;
+
+      return ExercisePerformanceSummary(
+        exerciseId: exercise.exerciseId,
+        exerciseName: exercise.exerciseName,
+        totalSets: exercise.sets,
+        completedSets: totalSets,
+        completionRate: completionRate,
+        underperformedCount: underperformedCount,
+        performedCount: performedCount,
+        overperformedCount: overperformedCount,
+        underperformedPercentage: totalSets > 0 ? underperformedCount / totalSets : 0.0,
+        performedPercentage: totalSets > 0 ? performedCount / totalSets : 0.0,
+        overperformedPercentage: totalSets > 0 ? overperformedCount / totalSets : 0.0,
+      );
+    }
+
+    return null;
+  }
+
+  /// Gets performance summary for all exercises in the workout
+  Map<int, ExercisePerformanceSummary> getAllExercisePerformanceSummaries() {
+    final currentState = state;
+    final summaries = <int, ExercisePerformanceSummary>{};
+
+    if (currentState is WorkoutSessionLoaded) {
+      // Get unique exercises from the workout plan
+      final exercises = currentState.workoutPlan.steps.whereType<WorkoutStepExercise>().map((step) => step.exercise).toSet();
+
+      // Get performance summary for each exercise
+      for (final exercise in exercises) {
+        final summary = getExercisePerformanceSummary(exercise);
+        if (summary != null) {
+          summaries[exercise.exerciseId] = summary;
+        }
+      }
+    }
+
+    return summaries;
   }
 }
 

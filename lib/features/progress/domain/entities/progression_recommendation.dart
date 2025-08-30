@@ -1,10 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'progression_recommendation.freezed.dart';
+part 'progression_recommendation.g.dart';
+
 enum ProgressionType { maintain, increaseWeight, increaseReps, decreaseWeight, decreaseReps }
 
-class ProgressionRecommendation {
-  final ProgressionType type;
-  final double? suggestedWeight;
-  final int? suggestedReps;
-  final String reasoning;
+@freezed
+class ProgressionRecommendation with _$ProgressionRecommendation {
+  const factory ProgressionRecommendation({required ProgressionType type, double? suggestedWeight, int? suggestedReps, required String reasoning}) =
+      _ProgressionRecommendation;
 
-  const ProgressionRecommendation({required this.type, this.suggestedWeight, this.suggestedReps, required this.reasoning});
+  factory ProgressionRecommendation.fromJson(Map<String, dynamic> json) => _$ProgressionRecommendationFromJson(json);
 }

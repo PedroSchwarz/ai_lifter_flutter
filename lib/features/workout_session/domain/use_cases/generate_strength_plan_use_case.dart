@@ -1,4 +1,5 @@
-import 'package:lifter/features/progress/progress.dart';
+import 'package:lifter/features/workout_session/workout_session.dart';
+import 'package:lifter/features/workouts/workouts.dart';
 
 /// Use case for generating strength-focused workout plans
 /// Implements 5x5 methodology and compound exercise focus
